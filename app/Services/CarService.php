@@ -35,4 +35,8 @@ class CarService
         return $this->carRepository->update($data, $id);
     }
 
+    public function delete($id) {
+        return $this->carRepository->delete($id);
+    }
+
 }

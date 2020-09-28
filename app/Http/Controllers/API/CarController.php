@@ -90,8 +90,17 @@ class CarController extends Controller
      * @param \App\Models\Car $car
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Car $car)
+    public function destroy($id)
     {
-        //
+        $result = $this->carService->delete($id);
+        if ($result) {
+            return response()->json([
+                'message' => "Car deleted successfully !"
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => "Can't delete car. Try again later"
+            ], 500);
+        }
     }
 }

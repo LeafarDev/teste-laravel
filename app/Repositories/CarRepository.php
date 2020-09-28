@@ -42,8 +42,8 @@ class CarRepository
             $car->save();
             DB::connection()->getPdo()->commit();
             return $this->find($car->id);
-        } catch (\PDOException $e) {
-            Log::error("Error (".__CLASS__."), (" . __METHOD__ . ")", ['Payload:' => $e->getMessage()]);
+        } catch (\Exception $e) {
+            Log::error("Error (" . __METHOD__ . ")", ['Payload:' => $e->getMessage()]);
             DB::connection()->getPdo()->rollBack();
             return false;
         }
@@ -57,8 +57,24 @@ class CarRepository
             $car->update($data);
             DB::connection()->getPdo()->commit();
             return $car;
-        } catch (\PDOException $e) {
-            Log::error("Error (".__CLASS__."), (" . __METHOD__ . ")", ['Payload:' => $e->getMessage()]);
+        } catch (\Exception $e) {
+            Log::error("Error (" . __METHOD__ . ")", ['Payload:' => $e->getMessage()]);
+            DB::connection()->getPdo()->rollBack();
+            return false;
+        }
+    }
+
+    public function delete($id)
+    {
+
+        try {
+            DB::connection()->getPdo()->beginTransaction();
+            $car = $this->car->where($this->car->getKeyName(), $id)->first();
+            $car->delete();
+            DB::connection()->getPdo()->commit();
+            return true;
+        } catch (\Exception $e) {
+            Log::error("Error (" . __METHOD__ . ")", ['Payload:' => $e->getMessage()]);
             DB::connection()->getPdo()->rollBack();
             return false;
         }

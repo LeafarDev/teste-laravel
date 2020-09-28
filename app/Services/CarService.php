@@ -15,14 +15,24 @@ class CarService
         $this->carRepository = $carRepository;
     }
 
+    public function find($id)
+    {
+        return $this->carRepository->find($id);
+    }
+
     public function getAll()
     {
         return $this->carRepository->getAll();
     }
 
-    public function saveCar($collection)
+    public function saveCar($data)
     {
-        return $this->carRepository->save($collection);
+        return $this->carRepository->save($data);
+    }
+
+    public function updateCar($data, $id)
+    {
+        return $this->carRepository->update($data, $id);
     }
 
 }

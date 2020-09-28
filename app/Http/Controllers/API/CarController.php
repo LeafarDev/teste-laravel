@@ -48,8 +48,6 @@ class CarController extends Controller
                 'message' => "Can't create car. Try again later"
             ], 500);
         }
-
-
     }
 
     /**
@@ -58,9 +56,9 @@ class CarController extends Controller
      * @param \App\Models\Car $car
      * @return \Illuminate\Http\Response
      */
-    public function show(Car $car)
+    public function show($id)
     {
-        //
+        return response()->json($this->carService->find($id));
     }
 
     /**
@@ -70,9 +68,20 @@ class CarController extends Controller
      * @param \App\Models\Car $car
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Car $car)
+    public function update(CarRequest $request, $id)
     {
-        //
+        $data = $request->all();
+        $result = $this->carService->updateCar($data, $id);
+        if ($result) {
+            return response()->json([
+                'data' => $result,
+                'message' => "Car updated successfully !"
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => "Can't update car. Try again later"
+            ], 500);
+        }
     }
 
     /**

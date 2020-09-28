@@ -33,15 +33,30 @@ class CarRepository
         return $car->findOrFail($id);
 
     }
-    public function save($collection)
+    public function save($data)
     {
         try {
             DB::connection()->getPdo()->beginTransaction();
             $car = $this->car;
-            $car->fill($collection);
+            $car->fill($data);
             $car->save();
             DB::connection()->getPdo()->commit();
             return $this->find($car->id);
+        } catch (\PDOException $e) {
+            Log::error("Error (".__CLASS__."), (" . __METHOD__ . ")", ['Payload:' => $e->getMessage()]);
+            DB::connection()->getPdo()->rollBack();
+            return false;
+        }
+    }
+
+    public function update($data, $id)
+    {
+        try {
+            DB::connection()->getPdo()->beginTransaction();
+            $car = $this->car->findOrFail($id);
+            $car->update($data);
+            DB::connection()->getPdo()->commit();
+            return $car;
         } catch (\PDOException $e) {
             Log::error("Error (".__CLASS__."), (" . __METHOD__ . ")", ['Payload:' => $e->getMessage()]);
             DB::connection()->getPdo()->rollBack();
